@@ -5,6 +5,7 @@
 Nest.js + MongoDB + jwt + Graphql +swagger 等
 
 后端项目地址：https://github.com/jimmywangzhiping/hilton
+前端项目地址：front_end 分支
 
 ## Mongodb连接地址
 config.development.ts里配置mongodb.connection: 'mongodb://localhost/reserve'
