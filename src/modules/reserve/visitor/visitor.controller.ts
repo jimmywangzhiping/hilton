@@ -4,6 +4,7 @@ import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { CreateVisitorDTO, LoginDTO } from '../dto/visitor.dto';
 import { VisitorService } from './visitor.service';
 import { ApiTransformInterceptor } from '../../../common/interceptors/api-transform.interceptor';
+import { VisitorRole } from '../schemas/types';
 
 
 @Controller('visitor')
@@ -12,11 +13,20 @@ export class VisitorController {
 
   @Post('register')
   @UseInterceptors(ApiTransformInterceptor)
-  @ApiOperation({ summary: '注册' })
+  @ApiOperation({ summary: '游客注册' })
   @ApiOkResponse({ description: '注册成功' })
   async register(@Body() body: CreateVisitorDTO): Promise<any> {
-    return await this.visitorService.register(body);
+    return await this.visitorService.register(body,VisitorRole.GUEST);
   }
+
+  @Post('admin/register')
+  @UseInterceptors(ApiTransformInterceptor)
+  @ApiOperation({ summary: '管理员注册' })
+  @ApiOkResponse({ description: '注册成功' })
+  async adminRegister(@Body() body: CreateVisitorDTO): Promise<any> {
+    return await this.visitorService.register(body,VisitorRole.ADMIN);
+  }
+
   @Post('login')
   @UseInterceptors(ApiTransformInterceptor)
   @ApiOperation({ summary: '登录' })

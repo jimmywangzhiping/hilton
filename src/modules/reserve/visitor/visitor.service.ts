@@ -45,7 +45,7 @@ export class VisitorService {
    * @param body
    * @returns
    */
-  async register(body: CreateVisitorDTO): Promise<any> {
+  async register(body: CreateVisitorDTO, role: VisitorRole): Promise<any> {
     const user = await this.findOne(body.userName);
     if (user) return new ApiException().errorMsg(10001);
     const aeskey = this.configService.get<string>('aeskey.key');
@@ -58,7 +58,7 @@ export class VisitorService {
       cipher.final(),
     ]).toString('base64');
     body.password = encryptedText;
-    body.role = VisitorRole.GUEST;
+    body.role = role;
     const result = await this.addOne(body);
     return { errorCode:200, userName: result.userName, _id: result._id };
   }

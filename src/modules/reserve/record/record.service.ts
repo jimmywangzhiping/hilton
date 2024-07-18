@@ -97,7 +97,7 @@ export class RecordService {
   async commit(body: CreateRecordDTO, userId: string): Promise<any> {
     const user = await this.visitorService.findById(userId);
     if (!user) return new ApiException().errorMsg(10001);
-    if (user.role === VisitorRole.ADMIN || user.role === VisitorRole.GUEST) {
+    if (user.role === VisitorRole.GUEST) {
       const record = await this.find(userId, 'ACTIVE');
       if (record && record.length > 0)
         return new ApiException().errorMsg(20001);
