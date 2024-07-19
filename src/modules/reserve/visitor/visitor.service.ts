@@ -24,8 +24,8 @@ export class VisitorService {
    * @param userName
    * @returns
    */
-  async findOne(userName: string): Promise<Visitor> {
-    return await this.visitorModel.findOne({ userName });
+  async findOne(userName: string, role: string): Promise<Visitor> {
+    return await this.visitorModel.findOne({ userName, role});
   }
   /**
    * 通过id获取访客信息
@@ -46,7 +46,7 @@ export class VisitorService {
    * @returns
    */
   async register(body: CreateVisitorDTO, role: VisitorRole): Promise<any> {
-    const user = await this.findOne(body.userName);
+    const user = await this.findOne(body.userName, role);
     if (user) return new ApiException().errorMsg(10001);
     const aeskey = this.configService.get<string>('aeskey.key');
     const ivkey = this.configService.get<string>('aeskey.iv');
@@ -66,8 +66,8 @@ export class VisitorService {
    * 登录
    * @param body
    */
-  async login(body: LoginDTO): Promise<any> {
-    const user = await this.findOne(body.userName);
+  async login(body: LoginDTO, role:string): Promise<any> {
+    const user = await this.findOne(body.userName, role);
     if (!user) return new ApiException().errorMsg(10000);
     const aeskey = this.configService.get<string>('aeskey.key');
     const ivkey = this.configService.get<string>('aeskey.iv');

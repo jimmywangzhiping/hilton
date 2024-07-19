@@ -30,8 +30,16 @@ export class VisitorController {
   @Post('login')
   @UseInterceptors(ApiTransformInterceptor)
   @ApiOperation({ summary: '登录' })
-  @ApiOkResponse({ description: '登录成功' })
+  @ApiOkResponse({ description: '游客登录成功' })
   async login(@Body() body: LoginDTO): Promise<any> {
-    return await this.visitorService.login(body);
+    return await this.visitorService.login(body, VisitorRole.GUEST);
+  }
+
+  @Post('admin/login')
+  @UseInterceptors(ApiTransformInterceptor)
+  @ApiOperation({ summary: '登录' })
+  @ApiOkResponse({ description: '管理员登录成功' })
+  async adminLogin(@Body() body: LoginDTO): Promise<any> {
+    return await this.visitorService.login(body, VisitorRole.ADMIN);
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Record } from '../interface/record.interface';
-import { CreateRecordDTO, EditRecordDTO } from '../dto/record.dto';
+import { AdminModifyRecordStatusDTO, CreateRecordDTO, EditRecordDTO } from '../dto/record.dto';
 import { ApiException } from '../../../common/exceptions/api.exception';
 import { VisitorService } from '../visitor/visitor.service';
 import { ReservationStatus, VisitorRole } from '../schemas/types';
@@ -30,13 +30,10 @@ export class RecordService {
    * @returns
    */
   async getReserveRecords(
-    userId: string,
     status: string,
     beginDate: Date,
     endDate: Date,
   ): Promise<any> {
-    const user = await this.visitorService.findById(userId);
-    if (!user) return new ApiException().errorMsg(10001);
     const conditon = {};
     if (status) {
       conditon['status'] = ReservationStatus[status];
@@ -130,12 +127,25 @@ export class RecordService {
       if (record.userId.toString() === userId) {
         if (body.status && body.status === ReservationStatus.COMPLETE)
           return new ApiException().errorMsg(30001);
-        console.log('record', record) 
         const result = await record.updateOne(record);
         return result && result.modifiedCount === 1 ? true : false;
       } else {
         return new ApiException().errorMsg(30001);
       }
+    }
+  }
+  // 管理员更新预约状态
+  async modifyStatus(body: AdminModifyRecordStatusDTO, userId: string): Promise<any> {
+    const user = await this.visitorService.findById(userId);
+    if (!user) return new ApiException().errorMsg(10001);
+    const record = await this.findOneById(body._id);
+    if (!record) return new ApiException().errorMsg(20000);
+    record.updatedAt = new Date();
+    record.status = ReservationStatus[body.status];
+    // 管理员可以更新预约信息 完成 取消
+    if (user.role === VisitorRole.ADMIN) {
+      const result = await record.updateOne(record);
+      return result && result.modifiedCount === 1 ? true : false;
     }
   }
 }

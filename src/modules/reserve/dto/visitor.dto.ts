@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+// import { VisitorRole } from '../schemas/types';
 
 // 增加访客记录
 export class CreateVisitorDTO {
@@ -41,5 +42,12 @@ export class LoginDTO {
     description: '密码',
   })
   readonly password: string;
+
+  // @ApiProperty({
+  //   type: String,
+  //   description: '角色',
+  //   enum: VisitorRole
+  // })
+  // readonly role: string;
 }
 

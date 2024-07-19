@@ -66,6 +66,20 @@ export class EditRecordDTO {
   reserveAt: Date;
 }
 
+export class AdminModifyRecordStatusDTO {
+  @ApiProperty({
+    type: String,
+    description: '主键id',
+  })
+  readonly _id: string;
+  @ApiProperty({
+    type: String,
+    description: '预约状态',
+    enum: ['CANCEL', 'COMPLETE'],
+  })
+  readonly status: string;
+}
+
 // 搜索记录
 export class SearchRecordDTO {
   @ApiProperty({

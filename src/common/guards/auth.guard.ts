@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate {
     }
     try {
       request[ADMIN_USER] = this.jwtService.verify(token);
+      
     } catch (error) {
       throw new Error('authorization token verify error');
     }

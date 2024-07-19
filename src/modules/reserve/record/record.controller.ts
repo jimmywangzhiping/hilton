@@ -83,33 +83,6 @@ export class RecordController {
     return await this.recordService.getReserveRecordById(userId, params.id);
   }
 
-  /**
-   * 获取预约信息
-   * @param params
-   * @returns
-   */
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Auth token',
-  })
-  @ApiOperation({ summary: '获取预约信息' })
-  @ApiOkResponse({ description: '获取预约信息成功' })
-  @Get('getReserveRecords')
-  @Authorize()
-  @UseInterceptors(ApiTransformInterceptor)
-  async getReserveRecords(
-    @Visitor() visitor: IVisitor,
-    @Body() body: SearchRecordDTO,
-  ) {
-    const userId = visitor.uid;
-    return await this.recordService.getReserveRecords(
-      userId,
-      body.status,
-      body.beginDate,
-      body.endDate,
-    );
-  }
-
   @ApiOperation({ summary: '获取UserId预约信息' })
   @ApiOkResponse({ description: '获取UserId预约信息成功' })
   @Get('getReserveRecordsByUserId')
