@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="app-container">
     <el-row :gutter="10">
@@ -34,7 +35,7 @@
         align="center"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button
             size="mini"
             type="text"
@@ -47,7 +48,7 @@
     </el-table>
     <el-dialog
       :title="title"
-      :visible.sync="open"
+      v-model="open"
       width="500px"
       append-to-body
       :close-on-click-modal="false"
@@ -60,7 +61,7 @@
           <el-input v-model="form.mobile" placeholder="请输入预约手机号码" />
         </el-form-item>
         <el-form-item label="预约状态" prop="status" >
-          <el-select v-model="form.status" placeholder="预约状态" :disabled ="isDisabled">
+          <el-select v-model="form.status" placeholder="预约状态" :disabled="isDisabled">
             <el-option label="ACTIVE" value="ACTIVE"></el-option>
             <el-option label="CANCEL" value="CANCEL"></el-option>
           </el-select>
@@ -70,26 +71,24 @@
             v-model="form.reserveAt"
             type="datetime"
             placeholder="选择日期时间"
-            default-time="12:00:00"
           >
           </el-date-picker>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
+
 <script>
-import {
-  commit,
-  update,
-  getReserveRecordsByUserId,
-  getRecordById,
-} from "@/api/index.js";
+import { commit, update, getReserveRecordsByUserId, getRecordById } from "@/api/index.js";
 import dayjs from "dayjs";
+
 export default {
   methods: {
     getList() {
@@ -109,63 +108,62 @@ export default {
       });
     },
     handleAdd() {
-      this.reset()
+      this.reset();
       this.open = true;
       this.title = "添加预约";
       this.isDisabled = true;
-      this.form.status = 'ACTIVE'
+      this.form.status = "ACTIVE";
     },
     cancel() {
       this.open = false;
     },
     reset() {
-      this.form.tableSize = undefined;
-      this.form.mobile = undefined;
-      this.form.status = undefined;
+      this.form = {
+        tableSize: undefined,
+        mobile: undefined,
+        status: undefined,
+        reserveAt: undefined,
+      };
     },
-    submitForm: function () {
+    submitForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.form._id !== undefined) {
-            update(this.form).then((res) => {
+            update(this.form).then(() => {
               this.$message.success("更新成功！");
+              this.getList(); // Refresh list after update
             });
           } else {
             commit(this.form).then((res) => {
-              if (
-                res &&
-                res.data &&
-                res.data.code === 200 &&
-                res.data.data &&
-                res.data.data.message
-              ) {
+              if (res && res.data && res.data.code === 200 && res.data.data && res.data.data.message) {
                 this.$message.success(res.data.data.message);
               } else {
                 this.$message.success("添加成功！");
               }
+              this.getList(); // Refresh list after adding
             });
           }
+          this.open = false; // Close dialog after submission
         }
       });
-      // 重新刷新页面
-      this.reset();
-      this.open = false;
-      this.getList();
-
     },
     dateFormatter(row) {
       return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss");
     },
-     dateFormatterReserver(row) {
+    dateFormatterReserver(row) {
       return dayjs(row.reserveAt).format("YYYY-MM-DD HH:mm:ss");
     },
   },
-
   data() {
     return {
       dataList: [],
       title: "",
-      form: {},
+      form: {
+        tableSize: undefined,
+        mobile: undefined,
+        status: undefined,
+        reserveAt: undefined,
+      },
       rules: {
         tableSize: [
           { required: true, message: "预约人数不能为空", trigger: "blur" },
@@ -180,9 +178,8 @@ export default {
           { required: true, message: "预约日期不能为空", trigger: "blur" },
         ],
       },
-      // 是否显示弹出层
       open: false,
-      isDisabled: true
+      isDisabled: true,
     };
   },
   mounted() {

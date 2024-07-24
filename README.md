@@ -1,19 +1,35 @@
-# reserve-web
+# hilton-web
 
-> 技术栈 vue、axios、element-ui
+This template should help get you started developing with Vue 3 in Vite.
 
-## Build Setup
+## Recommended IDE Setup
 
-``` bash
-# install dependencies
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
 npm install
+```
 
-# serve with hot reload at localhost:8080
+### Compile and Hot-Reload for Development
+
+```sh
 npm run dev
+```
 
-# build for production with minification
+### Compile and Minify for Production
+
+```sh
 npm run build
+```
 
-# build for production and view the bundle analyzer report
-npm run build --report
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
 ```

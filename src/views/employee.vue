@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="app-container">
     <el-table :data="dataList">
@@ -23,7 +24,7 @@
         align="center"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button
             size="mini"
             type="text"
@@ -36,7 +37,7 @@
     </el-table>
     <el-dialog
       :title="title"
-      :visible.sync="open"
+      v-model="open"
       width="500px"
       append-to-body
       :close-on-click-modal="false"
@@ -60,22 +61,23 @@
             v-model="form.reserveAt"
             type="datetime"
             placeholder="选择日期时间"
-            default-time="12:00:00"
           >
           </el-date-picker>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template v-slot:footer>
+<div  class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+</template>
     </el-dialog>
   </div>
 </template>
 <script>
 import {
   commit,
-  update,
+  adminUpdate,
   getReserveRecords,
   getRecordById,
 } from "@/api/index.js";
@@ -114,10 +116,8 @@ export default {
       this.form.status = undefined;
     },
     submitForm: function () {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          if (this.form._id !== undefined) {
-            update(this.form).then((res) => {
+      if (this.form._id !== undefined) {
+            adminUpdate(this.form).then(() => {
               this.$message.success("更新成功！");
             });
           } else {
@@ -135,8 +135,6 @@ export default {
               }
             });
           }
-        }
-      });
       // 重新刷新页面
       this.reset();
       this.open = false;

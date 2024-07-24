@@ -31,10 +31,10 @@
 </template>
 
 <script>
-import { register } from "@/api/index.js";
+import { adminRegister } from "@/api/index.js";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "register",
+  name: "adminRegister",
   data() {
     return {
       account: {},
@@ -66,7 +66,7 @@ export default {
             password: this.account.password,
             mobile: this.account.mobile,
           };
-          register(params).then((res) => {
+          adminRegister(params).then((res) => {
             if (res.data && res.data.code == 200) {
               if (res.data.data.errorCode === 200) {
                 this.$message.success("注册成功！");

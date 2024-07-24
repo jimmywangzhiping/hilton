@@ -14,15 +14,9 @@
           <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="account.password"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码" prop="repassword">
-            <el-input type="password" v-model="account.repassword"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号码" prop="mobile">
-            <el-input type="text" v-model="account.mobile"></el-input>
-          </el-form-item>
           <el-form-item style="text-align: center">
-            <el-button type="success" @click="userRegister">注册</el-button>
             <el-button type="primary" @click="userLogin">登录</el-button>
+            <el-button type="success" @click="userRegister">注册</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -31,10 +25,11 @@
 </template>
 
 <script>
-import { register } from "@/api/index.js";
+import { adminLogin } from "@/api/index.js";
+import { setToken } from '../utils/token'
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "register",
+  name: "adminLogin",
   data() {
     return {
       account: {},
@@ -43,45 +38,43 @@ export default {
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        repassword: [
-          { required: true, message: "请输入确认密码", trigger: "blur" },
-        ],
-        mobile: [
-          { required: true, message: "请输入手机号码", trigger: "blur" },
-        ],
       },
     };
   },
   methods: {
     // 注册
     userRegister() {
+      this.$router.push("/register");
+    },
+    // 登录
+    userLogin() {
       this.$refs.account.validate((valid) => {
-        if (this.account.password !== this.account.repassword) {
-          this.$message.error("两次密码不一致");
-          return;
-        }
         if (valid) {
           const params = {
             userName: this.account.userName,
             password: this.account.password,
-            mobile: this.account.mobile,
           };
-          register(params).then((res) => {
-            if (res.data && res.data.code == 200) {
-              if (res.data.data.errorCode === 200) {
-                this.$message.success("注册成功！");
+          adminLogin(params).then((res) => {
+            if (res.data && res.data.code === 200) {
+              setToken('token', res.data.data.token);
+               if (res.data.data.errorCode === 200) {
+                switch(res.data.data.role){
+                  case 'guest':
+                    this.$router.push('/visitor')
+                    break;
+                  case 'admin':
+                    this.$router.push('/employee')
+                    break;
+                }
               } else {
                 this.$message.error(res.data.data.message);
               }
             } else {
-              this.$message.error(res.data.data.message);
+              this.$message.error(res.data);
             }
           });
         }
       });
-    },
-    userLogin() {
-        this.$router.push("/login");
     },
     setSize() {
       return {
@@ -98,7 +91,7 @@ export default {
   position: relative;
 }
 .content {
-  width: 40vw;
+  width: 25vw;
   height: 25vh;
   position: absolute;
   top: 0;

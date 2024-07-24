@@ -28,6 +28,7 @@
 import { login } from "@/api/index.js";
 import { setToken } from '../utils/token'
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "login",
   data() {
     return {

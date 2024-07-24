@@ -1,47 +1,57 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Login from '@/views/login'
-import Register from '@/views/register'
-import Visitor from '@/views/visitor'
-import Employee from '@/views/employee'
+import { createRouter, createWebHistory } from 'vue-router'
 
-Vue.use(Router)
-
-export default new Router({
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
       name: 'login',
-      component: Login
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/login.vue')
     },
     {
       path: '/register',
-      name: 'Register',
-      component: Register
+      name: 'register',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/register.vue')
+    },
+    {
+      path: '/admin/login',
+      name: 'adminLogin',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/adminLogin.vue')
+    },
+    {
+      path: '/admin/register',
+      name: 'adminRegister',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/adminRegister.vue')
     },
     {
       path: '/visitor',
-      name: 'Visitor',
-      component: Visitor
+      name: 'visitor',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/visitor.vue')
     },
     {
       path: '/employee',
-      name: 'Employee',
-      component: Employee
-    },
-    {
-      path: '/',
-      name: 'layout',
-      component: Layout,
-      children: [
-        {
-          path: '/login',
-          name: 'login',
-          component: Login,
-          meta: { title: '登录' }
-        }
-      ]
-    },
-    
+      name: 'employee',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/employee.vue')
+    }
   ]
 })
+
+export default router

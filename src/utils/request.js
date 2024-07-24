@@ -1,10 +1,10 @@
 // 二次封装axios
 import axios from 'axios'
 import { getToken } from './token'
-import { Message } from 'element-ui'
+import { ElMessage  } from 'element-plus'
 
 const request = axios.create({
-  baseUrl: '/api',
+  baseURL: 'http://localhost:3000',
   timeout: 3000
 })
 
@@ -12,16 +12,16 @@ const request = axios.create({
 const errorHandle = (status, other) => {
   switch (status) {
       case 403:
-          Message.info('登录过期，请重新登录');
+        ElMessage({message:'登录过期，请重新登录',type:'error'});
           // 清除token
           setTimeout(() => {
           }, 1000);
           break;
       case 404:
-          Message.info('网络请求不存在');
+        ElMessage({message:'网络请求不存在',type:'error'});
           break;
       default:
-          Message.info(other);
+        ElMessage({message:other});
   }
 }
 
@@ -39,7 +39,7 @@ request.interceptors.response.use(res => {
   if(res.status == 200 || res.status===201 ) {
     return Promise.resolve(res)
   } else {
-    Message({type: 'warning', message: res.data.msg || 'error'})
+    ElMessage({type: 'warning', message: res.data.msg || 'error'})
   }
 }, error => {
   const { response } = error;
@@ -48,7 +48,7 @@ request.interceptors.response.use(res => {
     errorHandle(response.status, response.data.msg);
     return Promise.reject(response);
   } else {
-    Message.error('网络异常')
+    ElMessage({message:'网络异常',type:'error'})
   }
 
 })
