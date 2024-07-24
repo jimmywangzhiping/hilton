@@ -7,7 +7,7 @@ import { AdminModifyRecordStatusDTO, CreateRecordDTO, EditRecordDTO, SearchRecor
 import { IVisitor } from '../interface/visitor.interface';
 import { RecordService } from './record.service';
 
-@Controller('admin/reservation')
+@Controller('reservation')
 export class AdminReservationController {
     constructor(private readonly recordService: RecordService) {}
   

@@ -136,6 +136,7 @@ export class RecordService {
   }
   // 管理员更新预约状态
   async modifyStatus(body: AdminModifyRecordStatusDTO, userId: string): Promise<any> {
+    console.log(body);
     const user = await this.visitorService.findById(userId);
     if (!user) return new ApiException().errorMsg(10001);
     const record = await this.findOneById(body._id);
@@ -143,9 +144,11 @@ export class RecordService {
     record.updatedAt = new Date();
     record.status = ReservationStatus[body.status];
     // 管理员可以更新预约信息 完成 取消
-    if (user.role === VisitorRole.ADMIN) {
-      const result = await record.updateOne(record);
-      return result && result.modifiedCount === 1 ? true : false;
-    }
+    // if (user.role === VisitorRole.ADMIN) {
+    //   const result = await record.updateOne(record);
+    //   return result && result.modifiedCount === 1 ? true : false;
+    // }
+    const result = await record.updateOne(record);
+    return result && result.modifiedCount === 1 ? true : false;
   }
 }

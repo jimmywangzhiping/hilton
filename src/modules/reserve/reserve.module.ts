@@ -11,6 +11,7 @@ import { visitorSchema } from './schemas/visitor.schema';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { RecordResolver } from '../reserve/resolvers/record.resolver';
+import { AdminReservationController } from './record/admin-reservation.controller';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { RecordResolver } from '../reserve/resolvers/record.resolver';
       inject: [ConfigService],
     }),
   ],
-  controllers: [RecordController, VisitorController],
+  controllers: [RecordController, VisitorController,AdminReservationController],
   providers: [
     VisitorService,
     RecordService,
